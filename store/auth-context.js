@@ -13,12 +13,12 @@ export function AuthContextProvider({ children }) {
 
   const login = (token) => {
     setAuthToken(token);
-    saveToken("authLearningToken", token);
+    saveToken("vocabReviserToken", token);
   };
 
   const logout = () => {
     setAuthToken(null);
-    deleteToken("authLearningToken");
+    deleteToken("vocabReviserToken");
   };
 
   const value = {

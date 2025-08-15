@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { View, Text, ScrollView, StyleSheet, Platform } from "react-native";
 import * as Speech from "expo-speech";
 import { fetchDefinition } from "../utils/fetchData";
@@ -8,16 +8,21 @@ import { COLORS } from "../utils/colors";
 import { capitalizeFirstLetter } from "../utils/formatting";
 import Pills from "../components/ui/Pills";
 import { Ionicons } from "@expo/vector-icons";
+import { ScreenContext } from "../store/screen-context";
+import LoadingOverlay from "../components/LoadingOverlay";
 
 export default function DetailsScreen() {
   const [wordDetails, setWordDetails] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
+  const { screenDetails } = useContext(ScreenContext);
+  const { word, isNew } = screenDetails.params;
+
   useEffect(() => {
     const fetchWordDetails = async () => {
       try {
         setIsLoading(true);
-        const word = await fetchDefinition("hello");
+        // const word = await fetchDefinition(word);
         setWordDetails(word);
         setIsLoading(false);
       } catch (error) {
@@ -32,7 +37,7 @@ export default function DetailsScreen() {
   if (isLoading) {
     return (
       <ScreenWrapper>
-        <Text>Loading...</Text>
+        <LoadingOverlay message="Loading..." />
       </ScreenWrapper>
     );
   }
@@ -43,6 +48,16 @@ export default function DetailsScreen() {
 
   return (
     <ScreenWrapper>
+      {isNew && (
+        <View style={styles.successContainer}>
+          <Ionicons
+            name="checkmark-circle"
+            size={32}
+            color={COLORS.successIconAccentGreen}
+          />
+          <Text style={styles.successText}>Word added successfully!</Text>
+        </View>
+      )}
       <Header
         title={capitalizeFirstLetter(wordDetails.word)}
         style={styles.header}
@@ -93,6 +108,21 @@ export default function DetailsScreen() {
 }
 
 const styles = StyleSheet.create({
+  successContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 16,
+    backgroundColor: COLORS.successBannerBackground,
+    padding: 16,
+    borderRadius: 12,
+    marginVertical: 16,
+  },
+  successText: {
+    color: COLORS.textPrimary,
+    fontSize: 18,
+    fontWeight: "bold",
+  },
   scrollView: {
     flex: 1,
   },

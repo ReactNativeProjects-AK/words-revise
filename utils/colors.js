@@ -10,6 +10,10 @@ export const COLORS = {
   synonymChipBackground: "#3B82F6",
   antonymChipBackground: "#F97316",
   iconBlue: "#3B82F6",
+  successBannerBackground: "#065F46",
+  successIconAccentGreen: "#10B981",
+  errorBannerBackground: "#5e0a04",
+  errorIconAccentRed: "#d1190c",
 };
 
 // • Primary Blue (Buttons): #3B82F6
@@ -23,4 +27,7 @@ export const COLORS = {
 // Chip Text: #F1F5F9
 // Chip Icon Blue: #3B82F6
 // Chip Icon Orange: #F97316
-
+// successBannerBackground: #065F46,
+// successIconAccentGreen: #10B981,
+// errorBannerBackground:#5e0a04,
+// errorIconAccentRed:#d1190c,

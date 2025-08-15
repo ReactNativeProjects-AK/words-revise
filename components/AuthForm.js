@@ -7,14 +7,33 @@ import Header from "./ui/Header";
 import SupportingText from "./ui/SupportingText";
 import ButtonBare from "./ui/ButtonBare";
 
-export default function AuthForm({ isLogin }) {
+export default function AuthForm({ isLogin, onAuthenticate }) {
   const [formState, setFormState] = useState({
     email: "",
     password: "",
     confirmPassword: "",
   });
 
-  const loginHandler = ({ email, password, confirmPassword }) => {};
+  const loginHandler = () => {
+    const email = formState.email.trim();
+    const password = formState.password.trim();
+
+    const emailIsValid = email.includes("@");
+    const passwordIsValid = password.length > 6;
+    const passwordsAreEqual = password === formState.confirmPassword;
+
+    if (!emailIsValid || !passwordIsValid || (!isLogin && !passwordsAreEqual)) {
+      Alert.alert("Invalid input", "Please check your entered credentials.");
+      setCredentialsInvalid({
+        email: !emailIsValid,
+        confirmEmail: !emailIsValid,
+        password: !passwordIsValid,
+        confirmPassword: !passwordIsValid || !passwordsAreEqual,
+      });
+      return;
+    }
+    onAuthenticate({ email, password });
+  };
 
   const inputChangeHandler = (input, text) => {
     setFormState((prev) => {
@@ -59,10 +78,7 @@ export default function AuthForm({ isLogin }) {
           }}
         />
       )}
-      <Button
-        onPress={loginHandler.bind(this, formState)}
-        style={styles.button}
-      >
+      <Button onPress={loginHandler} style={styles.button}>
         {isLogin ? "Log In" : "Sign Up"}
       </Button>
       <SupportingText>

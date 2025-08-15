@@ -5,8 +5,12 @@ import { Image, StyleSheet } from "react-native";
 import { COLORS } from "../utils/colors";
 import Button from "../components/ui/Button";
 import SupportingText from "../components/ui/SupportingText";
+import { useContext } from "react";
+import { ScreenContext } from "../store/screen-context";
 
 export default function HomeScreen() {
+  const screenContext = useContext(ScreenContext);
+  const { setScreenDetailsHandler } = screenContext;
   return (
     <ScreenWrapper>
       <Header title="Vocabulary Reviser" />
@@ -14,8 +18,19 @@ export default function HomeScreen() {
         <SupportingText>Your vocabulary is your power</SupportingText>
         <Image source={require("../assets/home.png")} style={styles.image} />
       </Card>
-      <Button onPress={() => {}}>Start</Button>
-      <Button onPress={() => {}} style={styles.button}>
+      <Button
+        onPress={() => {
+          setScreenDetailsHandler("Details");
+        }}
+      >
+        Start
+      </Button>
+      <Button
+        onPress={() => {
+          setScreenDetailsHandler("AddWord");
+        }}
+        style={styles.button}
+      >
         Add Word
       </Button>
     </ScreenWrapper>
