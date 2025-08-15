@@ -10,9 +10,12 @@
   },
   "dependencies": {
     "expo": "~53.0.20",
+    "expo-secure-store": "^14.2.3",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
-    "react-native": "0.79.5"
+    "react-native": "0.79.5",
+    "react-native-safe-area-context": "^5.4.0",
+    "expo-speech": "~13.1.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
