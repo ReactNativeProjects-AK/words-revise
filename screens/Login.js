@@ -12,7 +12,7 @@ export default function Login() {
   const loginHandler = async ({ email, password }) => {
     try {
       const data = await login(email, password);
-      authContext.login(data.idToken, data.refreshToken);
+      authContext.login(data.idToken, data.localId, data.refreshToken);
       setScreenDetailsHandler("Home");
     } catch (error) {
       Alert.alert(

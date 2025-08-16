@@ -33,8 +33,10 @@ function LoadScreens() {
   useEffect(() => {
     async function loadToken() {
       const storedToken = await getToken("vocabReviserToken");
+      const userId = await getToken("vocabReviserUserId");
+      const refreshToken = await getToken("vocabReviserRefreshToken");
       if (storedToken) {
-        login(storedToken);
+        login(storedToken, userId, refreshToken);
       }
       setIsLoading(false);
     }
@@ -42,8 +44,8 @@ function LoadScreens() {
   }, [login, setIsLoading]);
 
   useEffect(() => {
-    const restrictedScreens = ["AddWord"];
-    if (restrictedScreens.includes(screen) && !isAuthorised) {
+    const nonRestrictedScreens = ["Login", "SignUp"];
+    if (!nonRestrictedScreens.includes(screen) && !isAuthorised) {
       setCurrentComponent("Login");
     } else {
       setCurrentComponent(screen);

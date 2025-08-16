@@ -7,7 +7,7 @@ import SupportingText from "./ui/SupportingText";
 import ButtonBare from "./ui/ButtonBare";
 import { useContext } from "react";
 import { ScreenContext } from "../store/screen-context";
-import HeaderWithHome from "./ui/HeaderWithHome";
+import Header from "./ui/Header";
 
 export default function AuthForm({ isLogin, onAuthenticate }) {
   const { setScreenDetailsHandler } = useContext(ScreenContext);
@@ -49,11 +49,7 @@ export default function AuthForm({ isLogin, onAuthenticate }) {
 
   return (
     <ScreenWrapper>
-      <HeaderWithHome
-        headerConfig={{
-          title: isLogin ? "Login" : "Sign Up",
-        }}
-      />
+      <Header title={isLogin ? "Login" : "Sign Up"} />
       <Input
         label="Email"
         value={formState.email}

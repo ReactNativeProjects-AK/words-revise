@@ -39,7 +39,7 @@ export const refreshIdToken = async () => {
     refresh_token: refreshToken,
   });
 
-  const { id_token, refresh_token, expires_in } = res.data;
+  const { id_token, refresh_token } = res.data;
 
   // Save new tokens
   await saveToken("vocabReviserToken", id_token);

@@ -13,7 +13,7 @@ import HeaderWithHome from "../components/ui/HeaderWithHome";
 
 export default function AddWordScreen() {
   const { setScreenDetailsHandler } = useContext(ScreenContext);
-  const { authToken } = useContext(AuthContext);
+  const { authToken, userId } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -27,7 +27,7 @@ export default function AddWordScreen() {
 
     try {
       setIsLoading(true);
-      const wordDetails = await fetchDefinition(word.toLowerCase(), authToken);
+      const wordDetails = await fetchDefinition(word.toLowerCase(), authToken, userId);
       setScreenDetailsHandler("Details", { isNew: true, wordDetails });
     } catch (error) {
       if (error.message === "Word already exists") {

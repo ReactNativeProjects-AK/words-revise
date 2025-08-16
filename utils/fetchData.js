@@ -3,10 +3,10 @@ import api from "./axios";
 
 const EXPO_PUBLIC_PROJECT_ID = process.env.EXPO_PUBLIC_PROJECT_ID;
 
-const addWord = async (wordDetails, authToken) => {
+const addWord = async (wordDetails, authToken, userId) => {
   try {
     const response = await api.post(
-      `${EXPO_PUBLIC_PROJECT_ID}/${wordDetails.word}.json?auth=${authToken}`,
+      `users/${userId}/${EXPO_PUBLIC_PROJECT_ID}/${wordDetails.word}.json?auth=${authToken}`,
       { ...wordDetails }
     );
 
@@ -17,10 +17,10 @@ const addWord = async (wordDetails, authToken) => {
   }
 };
 
-const checkWord = async (word, authToken) => {
+const checkWord = async (word, authToken, userId) => {
   try {
     const response = await api.get(
-      `${EXPO_PUBLIC_PROJECT_ID}/${word}.json?auth=${authToken}`
+      `users/${userId}/${EXPO_PUBLIC_PROJECT_ID}/${word}.json?auth=${authToken}`
     );
     return response;
   } catch (error) {
@@ -40,10 +40,10 @@ const shuffleArray = (array) => {
   return arr;
 };
 
-export async function fetchAllWords(authToken) {
+export async function fetchAllWords(authToken, userId) {
   try {
     const response = await api.get(
-      `${EXPO_PUBLIC_PROJECT_ID}.json?auth=${authToken}`
+      `users/${userId}/${EXPO_PUBLIC_PROJECT_ID}.json?auth=${authToken}`
     );
     const words = Object.keys(response.data).map((word) => ({
       ...Object.values(response.data[word])[0],
@@ -55,9 +55,9 @@ export async function fetchAllWords(authToken) {
   }
 }
 
-export async function fetchDefinition(word, authToken) {
+export async function fetchDefinition(word, authToken, userId) {
   try {
-    const checkWordResponse = await checkWord(word, authToken);
+    const checkWordResponse = await checkWord(word, authToken, userId);
     if (checkWordResponse.data) {
       throw new Error("Word already exists");
     }
@@ -98,7 +98,7 @@ export async function fetchDefinition(word, authToken) {
       antonyms: Array.from(antonyms),
     };
 
-    await addWord(formattedDefinition, authToken);
+    await addWord(formattedDefinition, authToken, userId);
     return formattedDefinition;
   } catch (error) {
     console.log("error", error);

@@ -8,18 +8,30 @@
       "android": {
         "buildType": "apk"
       },
+      "ios": {
+        "simulator": false
+      },
       "distribution": "internal"
     },
     "production": {
       "android": {
         "buildType": "apk"
       },
+      "ios": {
+        "simulator": false
+      },
       "autoIncrement": true,
       "env": {}
     },
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "simulator": false
+      }
     }
   },
   "submit": {

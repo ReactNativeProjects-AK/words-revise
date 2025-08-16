@@ -14,10 +14,10 @@ import { AuthContext } from "../store/auth-context";
 export default function HomeScreen() {
   const { setScreenDetailsHandler } = useContext(ScreenContext);
   const { setWords } = useContext(WordsContext);
-  const { isAuthorised, logout } = useContext(AuthContext);
+  const { isAuthorised, logout, authToken, userId } = useContext(AuthContext);
 
   const startRevisionHandler = async () => {
-    const allWords = await fetchAllWords();
+    const allWords = await fetchAllWords(authToken, userId);
     setWords(allWords);
     setScreenDetailsHandler("Revision");
   };
