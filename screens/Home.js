@@ -9,12 +9,12 @@ import { useContext } from "react";
 import { ScreenContext } from "../store/screen-context";
 import { fetchAllWords } from "../utils/fetchData";
 import { WordsContext } from "../store/words-context";
+import { AuthContext } from "../store/auth-context";
 
 export default function HomeScreen() {
-  const screenContext = useContext(ScreenContext);
+  const { setScreenDetailsHandler } = useContext(ScreenContext);
   const { setWords } = useContext(WordsContext);
-
-  const { setScreenDetailsHandler } = screenContext;
+  const { isAuthorised, logout } = useContext(AuthContext);
 
   const startRevisionHandler = async () => {
     const allWords = await fetchAllWords();
@@ -24,6 +24,14 @@ export default function HomeScreen() {
 
   const addWordHandler = () => {
     setScreenDetailsHandler("AddWord");
+  };
+
+  const handleAuth = () => {
+    if (isAuthorised) {
+      logout();
+    } else {
+      setScreenDetailsHandler("Login");
+    }
   };
 
   return (
@@ -36,6 +44,9 @@ export default function HomeScreen() {
       <Button onPress={startRevisionHandler}>Start</Button>
       <Button onPress={addWordHandler} style={styles.button}>
         Add Word
+      </Button>
+      <Button onPress={handleAuth} style={styles.button}>
+        {isAuthorised ? "Logout" : "Login"}
       </Button>
     </ScreenWrapper>
   );

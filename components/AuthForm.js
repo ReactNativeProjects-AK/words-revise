@@ -84,7 +84,13 @@ export default function AuthForm({ isLogin, onAuthenticate }) {
       <SupportingText>
         {isLogin ? "Don't have an account?" : "Already have an account?"}
       </SupportingText>
-      <ButtonBare onPress={() => {}}>
+      <ButtonBare
+        onPress={() => {
+          isLogin
+            ? setScreenDetailsHandler("SignUp")
+            : setScreenDetailsHandler("Login");
+        }}
+      >
         {isLogin ? "Sign Up" : "Log In"}
       </ButtonBare>
     </ScreenWrapper>

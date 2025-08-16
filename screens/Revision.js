@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import ScreenWrapper from "../components/ScreenWrapper";
-import Header from "../components/ui/Header";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import { useContext } from "react";
 import { ScreenContext } from "../store/screen-context";
-import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../utils/colors";
 import LoadingOverlay from "../components/LoadingOverlay";
 import { WordsContext } from "../store/words-context";
 import { capitalizeFirstLetter } from "../utils/formatting";
 import Notification from "../components/ui/Notification";
+import HeaderWithHome from "../components/ui/HeaderWithHome";
 
 export default function RevisionScreen() {
   const { getWord } = useContext(WordsContext);
@@ -60,27 +59,17 @@ export default function RevisionScreen() {
     setWordDetails(word);
   }, [setWordDetails]);
 
-  const homeHandler = () => {
-    setScreenDetailsHandler("Home");
-  };
-
   if (!wordDetails) {
     return <LoadingOverlay message="Loading..." />;
   }
 
   return (
     <ScreenWrapper>
-      <View style={styles.headerContainer}>
-        <Ionicons
-          name="home"
-          size={24}
-          onPress={homeHandler}
-          style={styles.navigationIcon}
-        />
-        <Header title={capitalizeFirstLetter(wordDetails.word)} />
-        <View></View>
-      </View>
-
+      <HeaderWithHome
+        headerConfig={{
+          title: capitalizeFirstLetter(wordDetails.word),
+        }}
+      />
       <Input
         label="Enter meaning"
         textInputConfig={{
@@ -108,21 +97,6 @@ export default function RevisionScreen() {
 }
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 16,
-    width: "100%",
-  },
-  navigationIcon: {
-    color: COLORS.buttonPrimary,
-    padding: 8,
-    backgroundColor: COLORS.cardSurfaceDark,
-    ...Platform.select({
-      ios: { borderRadius: 20 },
-    }),
-  },
   button: {
     marginVertical: 16,
   },

@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { View, Text, ScrollView, StyleSheet, Platform } from "react-native";
 import * as Speech from "expo-speech";
-import Header from "../components/ui/Header";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { COLORS } from "../utils/colors";
 import { capitalizeFirstLetter } from "../utils/formatting";
@@ -10,6 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { ScreenContext } from "../store/screen-context";
 import Notification from "../components/ui/Notification";
 import LoadingOverlay from "../components/LoadingOverlay";
+import HeaderWithHome from "../components/ui/HeaderWithHome";
 
 export default function DetailsScreen() {
   const { setScreenDetailsHandler, screenDetails } = useContext(ScreenContext);
@@ -23,10 +23,6 @@ export default function DetailsScreen() {
     Speech.speak(wordDetails.word);
   };
 
-  const homeHandler = () => {
-    setScreenDetailsHandler("Home");
-  };
-
   if (!wordDetails) {
     return <LoadingOverlay message="Loading..." />;
   }
@@ -36,35 +32,30 @@ export default function DetailsScreen() {
       {isNew && (
         <Notification message="Word added successfully!" type="success" />
       )}
-      <View style={styles.headerContainer}>
-        <Ionicons
-          name="home"
-          size={24}
-          onPress={homeHandler}
-          style={styles.navigationIcon}
-        />
-        <Header
-          title={capitalizeFirstLetter(wordDetails.word)}
-          style={styles.header}
-        >
-          <Ionicons
-            name="volume-high"
-            size={24}
-            onPress={speakWord}
-            style={styles.volumeIcon}
-          />
-        </Header>
-        <View>
-          {!isNew && (
+      <HeaderWithHome
+        headerConfig={{
+          title: capitalizeFirstLetter(wordDetails.word),
+          style: styles.header,
+          headerContent: (
+            <Ionicons
+              name="volume-high"
+              size={24}
+              onPress={speakWord}
+              style={styles.volumeIcon}
+            />
+          ),
+        }}
+        rightContent={
+          !isNew && (
             <Ionicons
               name="arrow-forward"
               size={24}
               onPress={nextWordHandler}
               style={styles.navigationIcon}
             />
-          )}
-        </View>
-      </View>
+          )
+        }
+      />
       <ScrollView style={styles.scrollView}>
         {wordDetails?.definitions?.length > 0 && (
           <>
@@ -104,13 +95,6 @@ export default function DetailsScreen() {
 }
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 16,
-    width: "100%",
-  },
   header: {
     flexDirection: "row",
     alignItems: "center",
