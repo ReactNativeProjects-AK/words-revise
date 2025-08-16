@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Alert } from "react-native";
 import ScreenWrapper from "./ScreenWrapper";
 import Input from "./ui/Input";
 import Button from "./ui/Button";
-import Header from "./ui/Header";
 import SupportingText from "./ui/SupportingText";
 import ButtonBare from "./ui/ButtonBare";
+import { useContext } from "react";
+import { ScreenContext } from "../store/screen-context";
+import HeaderWithHome from "./ui/HeaderWithHome";
 
 export default function AuthForm({ isLogin, onAuthenticate }) {
+  const { setScreenDetailsHandler } = useContext(ScreenContext);
   const [formState, setFormState] = useState({
     email: "",
     password: "",
@@ -24,12 +27,12 @@ export default function AuthForm({ isLogin, onAuthenticate }) {
 
     if (!emailIsValid || !passwordIsValid || (!isLogin && !passwordsAreEqual)) {
       Alert.alert("Invalid input", "Please check your entered credentials.");
-      setCredentialsInvalid({
-        email: !emailIsValid,
-        confirmEmail: !emailIsValid,
-        password: !passwordIsValid,
-        confirmPassword: !passwordIsValid || !passwordsAreEqual,
-      });
+      //   setCredentialsInvalid({
+      //     email: !emailIsValid,
+      //     confirmEmail: !emailIsValid,
+      //     password: !passwordIsValid,
+      //     confirmPassword: !passwordIsValid || !passwordsAreEqual,
+      //   });
       return;
     }
     onAuthenticate({ email, password });
@@ -46,7 +49,11 @@ export default function AuthForm({ isLogin, onAuthenticate }) {
 
   return (
     <ScreenWrapper>
-      <Header title={isLogin ? "Login" : "Sign Up"} />
+      <HeaderWithHome
+        headerConfig={{
+          title: isLogin ? "Login" : "Sign Up",
+        }}
+      />
       <Input
         label="Email"
         value={formState.email}
