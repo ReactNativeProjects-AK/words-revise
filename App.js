@@ -6,18 +6,21 @@ import HomeScreen from "./screens/Home";
 import SignUpScreen from "./screens/SignUp";
 import AddWordScreen from "./screens/AddWord";
 import DetailsScreen from "./screens/Details";
+import RevisionScreen from "./screens/Revision";
 import { AuthContext, AuthContextProvider } from "./store/auth-context";
 import { ScreenContext, ScreenContextProvider } from "./store/screen-context";
 import { getToken } from "./utils/secureToken";
 import { useContext, useEffect, useState } from "react";
 import { Text } from "react-native";
+import { WordsContextProvider } from "./store/words-context";
 
 const pages = {
   Home: HomeScreen,
-  Login: LoginScreen,
-  SignUp: SignUpScreen,
+  Revision: RevisionScreen,
   AddWord: AddWordScreen,
   Details: DetailsScreen,
+  Login: LoginScreen,
+  SignUp: SignUpScreen,
 };
 
 function LoadScreens() {
@@ -62,9 +65,11 @@ export default function App() {
     <>
       <AuthContextProvider>
         <ScreenContextProvider>
-          <SafeAreaProvider>
-            <LoadScreens />
-          </SafeAreaProvider>
+          <WordsContextProvider>
+            <SafeAreaProvider>
+              <LoadScreens />
+            </SafeAreaProvider>
+          </WordsContextProvider>
         </ScreenContextProvider>
       </AuthContextProvider>
       <StatusBar style="light" />

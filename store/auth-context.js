@@ -11,14 +11,16 @@ export const AuthContext = createContext({
 export function AuthContextProvider({ children }) {
   const [authToken, setAuthToken] = useState(null);
 
-  const login = (token) => {
+  const login = (token, refreshToken) => {
     setAuthToken(token);
     saveToken("vocabReviserToken", token);
+    saveToken("vocabReviserRefreshToken", refreshToken);
   };
 
   const logout = () => {
     setAuthToken(null);
     deleteToken("vocabReviserToken");
+    deleteToken("vocabReviserRefreshToken");
   };
 
   const value = {

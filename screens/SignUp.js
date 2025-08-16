@@ -12,7 +12,7 @@ export default function SignUp() {
   const signUpHandler = async ({ email, password }) => {
     try {
       const data = await createUser(email, password);
-      authContext.login(data.idToken);
+      authContext.login(data.idToken, data.refreshToken);
       setScreenDetailsHandler("Home");
     } catch (error) {
       Alert.alert(

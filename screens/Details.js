@@ -1,7 +1,6 @@
-import { useEffect, useState, useContext } from "react";
+import { useContext } from "react";
 import { View, Text, ScrollView, StyleSheet, Platform } from "react-native";
 import * as Speech from "expo-speech";
-import { fetchDefinition } from "../utils/fetchData";
 import Header from "../components/ui/Header";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { COLORS } from "../utils/colors";
@@ -9,68 +8,65 @@ import { capitalizeFirstLetter } from "../utils/formatting";
 import Pills from "../components/ui/Pills";
 import { Ionicons } from "@expo/vector-icons";
 import { ScreenContext } from "../store/screen-context";
+import Notification from "../components/ui/Notification";
 import LoadingOverlay from "../components/LoadingOverlay";
 
 export default function DetailsScreen() {
-  const [wordDetails, setWordDetails] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
+  const { setScreenDetailsHandler, screenDetails } = useContext(ScreenContext);
+  const { wordDetails, isNew } = screenDetails.params;
 
-  const { screenDetails } = useContext(ScreenContext);
-  const { word, isNew } = screenDetails.params;
-
-  useEffect(() => {
-    const fetchWordDetails = async () => {
-      try {
-        setIsLoading(true);
-        // const word = await fetchDefinition(word);
-        setWordDetails(word);
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-      }
-    };
-
-    fetchWordDetails();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <ScreenWrapper>
-        <LoadingOverlay message="Loading..." />
-      </ScreenWrapper>
-    );
-  }
+  const nextWordHandler = () => {
+    setScreenDetailsHandler("Revision");
+  };
 
   const speakWord = () => {
     Speech.speak(wordDetails.word);
   };
 
+  const homeHandler = () => {
+    setScreenDetailsHandler("Home");
+  };
+
+  if (!wordDetails) {
+    return <LoadingOverlay message="Loading..." />;
+  }
+
   return (
     <ScreenWrapper>
       {isNew && (
-        <View style={styles.successContainer}>
-          <Ionicons
-            name="checkmark-circle"
-            size={32}
-            color={COLORS.successIconAccentGreen}
-          />
-          <Text style={styles.successText}>Word added successfully!</Text>
-        </View>
+        <Notification message="Word added successfully!" type="success" />
       )}
-      <Header
-        title={capitalizeFirstLetter(wordDetails.word)}
-        style={styles.header}
-      >
+      <View style={styles.headerContainer}>
         <Ionicons
-          name="volume-high"
+          name="home"
           size={24}
-          onPress={speakWord}
-          style={styles.volumeIcon}
+          onPress={homeHandler}
+          style={styles.navigationIcon}
         />
-      </Header>
+        <Header
+          title={capitalizeFirstLetter(wordDetails.word)}
+          style={styles.header}
+        >
+          <Ionicons
+            name="volume-high"
+            size={24}
+            onPress={speakWord}
+            style={styles.volumeIcon}
+          />
+        </Header>
+        <View>
+          {!isNew && (
+            <Ionicons
+              name="arrow-forward"
+              size={24}
+              onPress={nextWordHandler}
+              style={styles.navigationIcon}
+            />
+          )}
+        </View>
+      </View>
       <ScrollView style={styles.scrollView}>
-        {wordDetails.definitions.length > 0 && (
+        {wordDetails?.definitions?.length > 0 && (
           <>
             <Text style={[styles.text, styles.subHeader]}>Definitions</Text>
             {wordDetails.definitions.map((def, index) => (
@@ -89,14 +85,14 @@ export default function DetailsScreen() {
           </>
         )}
 
-        {wordDetails.synonyms.length > 0 && (
+        {wordDetails?.synonyms?.length > 0 && (
           <>
             <Text style={[styles.text, styles.subHeader]}>Synonyms</Text>
             <Pills words={wordDetails.synonyms} style={styles.synonymChip} />
           </>
         )}
 
-        {wordDetails.antonyms.length > 0 && (
+        {wordDetails?.antonyms?.length > 0 && (
           <>
             <Text style={[styles.text, styles.subHeader]}>Antonyms</Text>
             <Pills words={wordDetails.antonyms} style={styles.antonymChip} />
@@ -108,34 +104,29 @@ export default function DetailsScreen() {
 }
 
 const styles = StyleSheet.create({
-  successContainer: {
+  headerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
     gap: 16,
-    backgroundColor: COLORS.successBannerBackground,
-    padding: 16,
-    borderRadius: 12,
-    marginVertical: 16,
-  },
-  successText: {
-    color: COLORS.textPrimary,
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  scrollView: {
-    flex: 1,
+    width: "100%",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 16,
+  },
+  scrollView: {
+    flex: 1,
   },
   volumeIcon: {
     color: COLORS.buttonPrimary,
-    backgroundColor: COLORS.cardSurfaceDark,
     padding: 8,
+  },
+  navigationIcon: {
+    color: COLORS.buttonPrimary,
+    padding: 8,
+    backgroundColor: COLORS.cardSurfaceDark,
     ...Platform.select({
       ios: { borderRadius: 20 },
     }),
@@ -147,7 +138,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     letterSpacing: 0.5,
   },
-
   pointContainer: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -162,7 +152,7 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
     fontWeight: "bold",
     marginRight: 16,
-    width: 20,
+    width: 25,
     lineHeight: 24,
   },
   point: {

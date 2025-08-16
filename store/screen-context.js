@@ -1,13 +1,13 @@
 import { createContext, useState } from "react";
 
 export const ScreenContext = createContext({
-  screenDetails: { screen: "AddWord", params: {} },
+  screenDetails: { screen: "Home", params: {} },
   setScreenDetailsHandler: () => {},
 });
 
 export function ScreenContextProvider({ children }) {
   const [screenDetails, setScreenDetails] = useState({
-    screen: "AddWord",
+    screen: "Home",
     params: {},
   });
 

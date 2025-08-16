@@ -7,10 +7,25 @@ import Button from "../components/ui/Button";
 import SupportingText from "../components/ui/SupportingText";
 import { useContext } from "react";
 import { ScreenContext } from "../store/screen-context";
+import { fetchAllWords } from "../utils/fetchData";
+import { WordsContext } from "../store/words-context";
 
 export default function HomeScreen() {
   const screenContext = useContext(ScreenContext);
+  const { setWords } = useContext(WordsContext);
+
   const { setScreenDetailsHandler } = screenContext;
+
+  const startRevisionHandler = async () => {
+    const allWords = await fetchAllWords();
+    setWords(allWords);
+    setScreenDetailsHandler("Revision");
+  };
+
+  const addWordHandler = () => {
+    setScreenDetailsHandler("AddWord");
+  };
+
   return (
     <ScreenWrapper>
       <Header title="Vocabulary Reviser" />
@@ -18,19 +33,8 @@ export default function HomeScreen() {
         <SupportingText>Your vocabulary is your power</SupportingText>
         <Image source={require("../assets/home.png")} style={styles.image} />
       </Card>
-      <Button
-        onPress={() => {
-          setScreenDetailsHandler("Details");
-        }}
-      >
-        Start
-      </Button>
-      <Button
-        onPress={() => {
-          setScreenDetailsHandler("AddWord");
-        }}
-        style={styles.button}
-      >
+      <Button onPress={startRevisionHandler}>Start</Button>
+      <Button onPress={addWordHandler} style={styles.button}>
         Add Word
       </Button>
     </ScreenWrapper>
