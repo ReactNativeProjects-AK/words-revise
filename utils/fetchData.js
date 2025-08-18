@@ -6,8 +6,9 @@ const EXPO_PUBLIC_PROJECT_ID = process.env.EXPO_PUBLIC_PROJECT_ID;
 const addWord = async (wordDetails, authToken, userId) => {
   try {
     const response = await api.post(
-      `users/${userId}/${EXPO_PUBLIC_PROJECT_ID}/${wordDetails.word}.json?auth=${authToken}`,
-      { ...wordDetails }
+      `users/${userId}/${EXPO_PUBLIC_PROJECT_ID}/${wordDetails.word}.json`,
+      { ...wordDetails },
+      { params: { auth: authToken } }
     );
 
     return response;
@@ -20,7 +21,8 @@ const addWord = async (wordDetails, authToken, userId) => {
 const checkWord = async (word, authToken, userId) => {
   try {
     const response = await api.get(
-      `users/${userId}/${EXPO_PUBLIC_PROJECT_ID}/${word}.json?auth=${authToken}`
+      `users/${userId}/${EXPO_PUBLIC_PROJECT_ID}/${word}.json`,
+      { params: { auth: authToken } }
     );
     return response;
   } catch (error) {
@@ -43,7 +45,8 @@ const shuffleArray = (array) => {
 export async function fetchAllWords(authToken, userId) {
   try {
     const response = await api.get(
-      `users/${userId}/${EXPO_PUBLIC_PROJECT_ID}.json?auth=${authToken}`
+      `users/${userId}/${EXPO_PUBLIC_PROJECT_ID}.json`,
+      { params: { auth: authToken } }
     );
     const words = Object.keys(response.data).map((word) => ({
       ...Object.values(response.data[word])[0],
