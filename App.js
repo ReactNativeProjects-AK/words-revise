@@ -11,7 +11,7 @@ import { AuthContext, AuthContextProvider } from "./store/auth-context";
 import { ScreenContext, ScreenContextProvider } from "./store/screen-context";
 import { getToken } from "./utils/secureToken";
 import { useContext, useEffect, useState } from "react";
-import { Text } from "react-native";
+import { Alert, BackHandler, Text } from "react-native";
 import { WordsContextProvider } from "./store/words-context";
 
 const pages = {
@@ -24,7 +24,7 @@ const pages = {
 };
 
 function LoadScreens() {
-  const { screenDetails } = useContext(ScreenContext);
+  const { screenDetails, setScreenDetailsHandler } = useContext(ScreenContext);
   const { isAuthorised, login } = useContext(AuthContext);
   const { screen, params } = screenDetails;
   const [currentComponent, setCurrentComponent] = useState(screen);
@@ -51,6 +51,41 @@ function LoadScreens() {
       setCurrentComponent(screen);
     }
   }, [isAuthorised, screen, setCurrentComponent]);
+
+  useEffect(() => {
+    const backAction = () => {
+      if (screen === "Home") {
+        return false;
+      }
+
+      const inProgressScreen = ["Revision", "Details"];
+      if (inProgressScreen.includes(screen) && !params.isNew) {
+        Alert.alert(
+          "Hold on!",
+          "Are you sure you want to exit? You will lose your progress.",
+          [
+            { text: "Cancel", style: "cancel", onPress: () => null },
+            {
+              text: "YES",
+              style: "destructive",
+              onPress: () => setScreenDetailsHandler("Home"),
+            },
+          ]
+        );
+        return true; // prevent default behavior
+      }
+
+      setScreenDetailsHandler("Home");
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove(); // cleanup
+  }, [screen, setScreenDetailsHandler, params.isNew]);
 
   if (isLoading) {
     return <Text>Loading...</Text>;
