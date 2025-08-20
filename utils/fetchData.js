@@ -58,7 +58,12 @@ export async function fetchAllWords(authToken, userId) {
   }
 }
 
-export async function fetchDefinition(word, authToken, userId) {
+export async function fetchDefinition(
+  word,
+  authToken,
+  userId,
+  customWordDefinitions
+) {
   try {
     const checkWordResponse = await checkWord(word, authToken, userId);
     if (checkWordResponse.data) {
@@ -74,7 +79,7 @@ export async function fetchDefinition(word, authToken, userId) {
       throw new Error("Word not found");
     }
 
-    const definitions = [];
+    const definitions = [...customWordDefinitions];
     const synonyms = new Set();
     const antonyms = new Set();
 
